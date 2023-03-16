@@ -1,0 +1,74 @@
+﻿@model IEnumerable<EPM.Mouser.Interview.Models.Product>
+@{
+    ViewData["Title"] = "Test Page";
+}
+
+
+<h1>In Stock items</h1>
+
+@*
+    Display a table here which shows the products with any Available stock
+    - use the bootstrap table styling
+    - Available stock = Total Stock - Reserved Stock
+    - Columns shown:
+        - action => with a link to a placeholder product detail page.
+        - Name
+        - Total Amount in stock
+        - Available stock (this should be orange if < 10 and red < zero)
+
+*@
+
+<div class="table-responsive">
+    <table class="table table-bordered table-condensed table-striped table-hover sortable">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Total Amount in stock</th>
+                <th>Available stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count() == 0)
+            {
+                <tr>
+                    <td colspan="10">No Record's found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @Html.ActionLink("View", "Home", new {  id=product.Id  })
+                        </td>
+                        <td>
+                            @product.Name
+                        </td>
+                        <td>
+                            @product.InStockQuantity
+                        </td>
+                        <td>
+                            @{
+                                var qty = (product.InStockQuantity - product.ReservedQuantity);
+                                var color = "";
+                                @if (qty < 0)
+                                {
+                                    color = "style=color:red;";
+                                }
+                                else if (qty < 10)
+                                {
+                                    color = "style=color:orange;";
+                                }
+                            }
+                            <span @color>
+                                @(qty)
+                            </span>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
